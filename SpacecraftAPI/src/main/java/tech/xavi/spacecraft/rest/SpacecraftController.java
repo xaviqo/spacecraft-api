@@ -11,7 +11,7 @@ import tech.xavi.spacecraft.service.SpacecraftService;
 import java.util.List;
 
 @RestController
-@RequestMapping(EndPoints.EP_API_ROOT) @RequiredArgsConstructor
+@RequestMapping(EndPoints.EP_SPACECRAFT) @RequiredArgsConstructor
 public class SpacecraftController {
 
     private final SpacecraftService spacecraftService;

@@ -1,6 +1,7 @@
 package tech.xavi.spacecraft.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
@@ -19,9 +20,9 @@ public class SpacecraftServiceImpl implements SpacecraftService {
 
     @Override
     public List<Spacecraft> getAllSpacecrafts(int page, int size) {
-        // Implementación de la paginación según tus necesidades
-        // Podrías utilizar métodos de repositorio específicos de Spring Data JPA
-        return null;
+        return spacecraftRepository
+                .findAll(PageRequest.of(page, size))
+                .getContent();
     }
 
     @Override
