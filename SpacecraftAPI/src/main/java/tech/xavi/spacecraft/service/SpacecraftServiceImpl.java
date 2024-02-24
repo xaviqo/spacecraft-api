@@ -2,9 +2,13 @@ package tech.xavi.spacecraft.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.entity.Spacecraft;
+import tech.xavi.spacecraft.exception.ApiError;
+import tech.xavi.spacecraft.exception.ApiException;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -25,9 +29,12 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .getContent();
     }
 
+    @Cacheable(value = "spaceship-by-id")
     @Override
     public Spacecraft getSpacecraftById(long id) {
-        return spacecraftRepository.findById(id).orElse(null);
+        return spacecraftRepository.findById(id).orElseThrow(
+                () -> new ApiException(ApiError.INVALID_SPACECRAFT_ID, HttpStatus.BAD_REQUEST)
+        );
     }
 
     @Override
