@@ -1,4 +1,4 @@
-package tech.xavi.spacecraft.rest;
+package tech.xavi.spacecraft.rest.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
