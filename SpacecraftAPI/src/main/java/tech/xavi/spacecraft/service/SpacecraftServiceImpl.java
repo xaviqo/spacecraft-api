@@ -6,9 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
-import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
+import tech.xavi.spacecraft.mapper.SpacecraftMapper;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
 
 import java.util.List;
@@ -18,58 +18,79 @@ import java.util.concurrent.TimeUnit;
 public class SpacecraftServiceImpl implements SpacecraftService {
 
     private final SpacecraftRepository spacecraftRepository;
-    private final Cache<Long,Spacecraft> spacecraftCache;
+    private final SpacecraftMapper mapper;
+    private final Cache<Long,SpacecraftDto> spacecraftCache;
 
 
 
-    public SpacecraftServiceImpl(SpacecraftRepository spacecraftRepository) {
+    public SpacecraftServiceImpl(
+            SpacecraftRepository spacecraftRepository,
+            SpacecraftMapper mapper
+    ) {
         this.spacecraftRepository = spacecraftRepository;
+        this.mapper = mapper;
         this.spacecraftCache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build();
     }
 
     @Override
-    public List<Spacecraft> getAllSpacecrafts() {
-        return spacecraftRepository.findAll();
+    public List<SpacecraftDto> getAllSpacecrafts() {
+        return spacecraftRepository
+                .findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    public List<Spacecraft> getAllSpacecrafts(int page, int size) {
+    public List<SpacecraftDto> getAllSpacecrafts(int page, int size) {
         return spacecraftRepository
                 .findAll(PageRequest.of(page, size))
-                .getContent();
+                .getContent()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    public Spacecraft getSpacecraftById(long id) {
+    public SpacecraftDto getSpacecraftById(long id) {
         return spacecraftCache.get(id, key ->
                 spacecraftRepository
                         .findById(id)
-                        .orElseThrow( () -> new ApiException(ApiError.SC_ID_NOT_FOUND, HttpStatus.BAD_REQUEST) )
+                        .map(mapper::toDto)
+                        .orElseThrow(() -> new ApiException(ApiError.SC_ID_NOT_FOUND, HttpStatus.BAD_REQUEST))
         );
     }
 
     @Override
-    public List<Spacecraft> getSpacecraftsByNameContains(String name) {
-        return spacecraftRepository.findByNameContaining(name);
+    public List<SpacecraftDto> getSpacecraftsByNameContains(String name) {
+        return spacecraftRepository
+                .findByNameContaining(name)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    public Spacecraft createSpacecraft(SpacecraftDto dto) {
-        return null;
-        //return spacecraftRepository.save(mapper.map(dto,Spacecraft.class));
+    public SpacecraftDto createSpacecraft(SpacecraftDto dto) {
+        spacecraftRepository.save(mapper.toEntity(dto));
+        return dto;
     }
 
     @Override
-    public Spacecraft updateSpacecraft(long id, SpacecraftDto dto) {
-        if (dto.id() == id && spacecraftRepository.existsById(id)) return null;
-            //return spacecraftRepository.save(mapper.map(dto, Spacecraft.class));
+    public SpacecraftDto updateSpacecraft(long id, SpacecraftDto dto) {
+        if (dto.id() == id && spacecraftRepository.existsById(id)) {
+            spacecraftRepository.save(mapper.toEntity(dto));
+            return dto;
+        }
         throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public void deleteSpacecraft(long id) {
-        spacecraftRepository.deleteById(id);
+        if (spacecraftRepository.existsById(id))
+            spacecraftRepository.deleteById(id);
+        throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
     }
 }

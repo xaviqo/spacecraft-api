@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.xavi.spacecraft.configuration.EndPoints;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
-import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.service.SpacecraftService;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class SpacecraftController {
     private final SpacecraftService spacecraftService;
 
     @GetMapping
-    public ResponseEntity<List<Spacecraft>> getAllSpacecrafts(@RequestParam(required = false) Integer page,
+    public ResponseEntity<List<SpacecraftDto>> getAllSpacecrafts(@RequestParam(required = false) Integer page,
                                                               @RequestParam(required = false) Integer size) {
         return ResponseEntity.ok(
                 (page != null && size != null)
@@ -30,24 +29,24 @@ public class SpacecraftController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Spacecraft> getSpacecraftById(@PathVariable long id) {
+    public ResponseEntity<SpacecraftDto> getSpacecraftById(@PathVariable long id) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftById(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Spacecraft>> getSpacecraftsByNameContains(@RequestParam String name) {
+    public ResponseEntity<List<SpacecraftDto>> getSpacecraftsByNameContains(@RequestParam String name) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftsByNameContains(name));
     }
 
     @PostMapping
-    public ResponseEntity<Spacecraft> createSpacecraft(@RequestBody SpacecraftDto dto) {
+    public ResponseEntity<SpacecraftDto> createSpacecraft(@RequestBody SpacecraftDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(spacecraftService.createSpacecraft(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Spacecraft> updateSpacecraft(@PathVariable long id, @RequestBody SpacecraftDto dto) {
+    public ResponseEntity<SpacecraftDto> updateSpacecraft(@PathVariable long id, @RequestBody SpacecraftDto dto) {
         return ResponseEntity.ok(spacecraftService.updateSpacecraft(id, dto));
     }
 
