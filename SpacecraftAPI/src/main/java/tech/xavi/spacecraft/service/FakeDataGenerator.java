@@ -1,4 +1,4 @@
-package tech.xavi.spacecraft.configuration;
+package tech.xavi.spacecraft.service;
 
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.Random;
 
 @Component @RequiredArgsConstructor @Log4j2
-public class FakeDataCfg implements CommandLineRunner {
+public class FakeDataGenerator implements CommandLineRunner {
 
     private final SpacecraftRepository repository;
-    private final long TOTAL_ENTRIES = 100;
 
     @Override
     public void run(String... args) {
@@ -26,15 +25,23 @@ public class FakeDataCfg implements CommandLineRunner {
     }
 
     private void generateTestData(){
+        long totalEntries = 100;
+
         StopWatch stopwatch = new StopWatch();
         stopwatch.start();
-        log.info("Inserting test dataset, total {} records...",TOTAL_ENTRIES);
 
+        log.info("Inserting test dataset, total {} records...", totalEntries);
+        repository.saveAll(getFakeSpacecraftList(totalEntries));
+        stopwatch.stop();
+        log.info("Test dataset successfully inserted! Time elapsed {}sec",stopwatch.getTotalTimeSeconds());
+    }
+
+    public static List<Spacecraft> getFakeSpacecraftList(long total){
         List<Spacecraft> dataSet = new ArrayList<>();
         Faker faker = new Faker();
         Random random = new Random();
 
-        for (int i = 0; i < TOTAL_ENTRIES; i++)
+        for (int i = 0; i < total; i++)
             dataSet.add(
                     Spacecraft.builder()
                             .name(faker.space().nasaSpaceCraft())
@@ -46,8 +53,6 @@ public class FakeDataCfg implements CommandLineRunner {
                             .build()
             );
 
-        repository.saveAll(dataSet);
-        stopwatch.stop();
-        log.info("Test dataset successfully inserted! Time elapsed {}sec",stopwatch.getTotalTimeSeconds());
+        return dataSet;
     }
 }

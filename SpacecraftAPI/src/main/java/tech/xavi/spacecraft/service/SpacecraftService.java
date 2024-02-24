@@ -1,12 +1,13 @@
 package tech.xavi.spacecraft.service;
 
+import org.springframework.data.domain.Pageable;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
 
 import java.util.List;
 
 public interface SpacecraftService {
     List<SpacecraftDto> getAllSpacecrafts();
-    List<SpacecraftDto> getAllSpacecrafts(int page, int size);
+    List<SpacecraftDto> getAllSpacecrafts(Pageable pageable);
     SpacecraftDto getSpacecraftById(long id);
     List<SpacecraftDto> getSpacecraftsByNameContains(String name);
     SpacecraftDto createSpacecraft(SpacecraftDto dto);

@@ -2,7 +2,7 @@ package tech.xavi.spacecraft.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
@@ -10,7 +10,6 @@ import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
 import tech.xavi.spacecraft.mapper.SpacecraftMapper;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +19,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
     private final SpacecraftRepository spacecraftRepository;
     private final SpacecraftMapper mapper;
     private final Cache<Long,SpacecraftDto> spacecraftCache;
-
 
 
     public SpacecraftServiceImpl(
@@ -44,9 +42,9 @@ public class SpacecraftServiceImpl implements SpacecraftService {
     }
 
     @Override
-    public List<SpacecraftDto> getAllSpacecrafts(int page, int size) {
+    public List<SpacecraftDto> getAllSpacecrafts(Pageable pageable) {
         return spacecraftRepository
-                .findAll(PageRequest.of(page, size))
+                .findAll(pageable)
                 .getContent()
                 .stream()
                 .map(mapper::toDto)

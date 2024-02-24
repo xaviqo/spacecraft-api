@@ -1,7 +1,9 @@
 package tech.xavi.spacecraft.dto;
 
+import lombok.Builder;
 import tech.xavi.spacecraft.entity.Status;
 
+@Builder
 public record SpacecraftDto(
         long id,
         String name,
