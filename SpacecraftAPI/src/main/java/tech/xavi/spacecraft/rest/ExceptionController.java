@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.xavi.spacecraft.exception.ApiException;
-import tech.xavi.spacecraft.model.ErrorPayload;
+import tech.xavi.spacecraft.dto.ErrorPayload;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

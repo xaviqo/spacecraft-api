@@ -2,7 +2,7 @@ package tech.xavi.spacecraft.configuration;
 
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -12,7 +12,7 @@ import tech.xavi.spacecraft.service.SpacecraftService;
 
 import java.util.Random;
 
-@Component @RequiredArgsConstructor @Slf4j
+@Component @RequiredArgsConstructor @Log4j2
 public class FakeDataCfg implements CommandLineRunner {
 
     private final SpacecraftService spacecraftService;
