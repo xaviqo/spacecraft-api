@@ -1,6 +1,7 @@
 package tech.xavi.spacecraft.service;
 
-import lombok.RequiredArgsConstructor;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Cache;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -8,14 +9,22 @@ import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-@Service @RequiredArgsConstructor
+@Service
 public class SpacecraftServiceImpl implements SpacecraftService {
 
     private final SpacecraftRepository spacecraftRepository;
+    private final Cache<Long,Spacecraft> spacecraftCache;
+
+    public SpacecraftServiceImpl(SpacecraftRepository spacecraftRepository) {
+        this.spacecraftRepository = spacecraftRepository;
+        this.spacecraftCache = Caffeine.newBuilder()
+                .expireAfterWrite(10, TimeUnit.SECONDS)
+                .build();
+    }
 
     @Override
     public List<Spacecraft> getAllSpacecrafts() {
@@ -29,11 +38,14 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .getContent();
     }
 
-    @Cacheable(value = "spaceship-by-id")
     @Override
     public Spacecraft getSpacecraftById(long id) {
-        return spacecraftRepository.findById(id).orElseThrow(
-                () -> new ApiException(ApiError.INVALID_SPACECRAFT_ID, HttpStatus.BAD_REQUEST)
+        if (id < 0)
+            throw new ApiException(ApiError.NEGATIVE_ID,HttpStatus.BAD_REQUEST);
+        return spacecraftCache.get(id, key ->
+                spacecraftRepository
+                        .findById(id)
+                        .orElseThrow( () -> new ApiException(ApiError.INVALID_ID, HttpStatus.BAD_REQUEST) )
         );
     }
 
@@ -49,11 +61,13 @@ public class SpacecraftServiceImpl implements SpacecraftService {
 
     @Override
     public Spacecraft updateSpacecraft(long id, Spacecraft spacecraft) {
+        if (id < 0)
+            throw new ApiException(ApiError.NEGATIVE_ID,HttpStatus.BAD_REQUEST);
         if (spacecraftRepository.existsById(id)) {
             spacecraft.setId(id);
             return spacecraftRepository.save(spacecraft);
         }
-        return null;
+        throw new ApiException(ApiError.INVALID_ID,HttpStatus.BAD_REQUEST);
     }
 
     @Override
