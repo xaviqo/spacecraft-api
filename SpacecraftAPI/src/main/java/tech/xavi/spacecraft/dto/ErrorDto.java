@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.time.ZonedDateTime;
 
 @Builder
-public record ErrorPayload(
+public record ErrorDto(
         String error,
         int code,
         String message,

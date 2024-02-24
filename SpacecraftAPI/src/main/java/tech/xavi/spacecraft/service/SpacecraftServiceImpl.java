@@ -1,10 +1,11 @@
 package tech.xavi.spacecraft.service;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import tech.xavi.spacecraft.dto.SpacecraftDto;
 import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
@@ -18,6 +19,8 @@ public class SpacecraftServiceImpl implements SpacecraftService {
 
     private final SpacecraftRepository spacecraftRepository;
     private final Cache<Long,Spacecraft> spacecraftCache;
+
+
 
     public SpacecraftServiceImpl(SpacecraftRepository spacecraftRepository) {
         this.spacecraftRepository = spacecraftRepository;
@@ -40,12 +43,10 @@ public class SpacecraftServiceImpl implements SpacecraftService {
 
     @Override
     public Spacecraft getSpacecraftById(long id) {
-        if (id < 0)
-            throw new ApiException(ApiError.NEGATIVE_ID,HttpStatus.BAD_REQUEST);
         return spacecraftCache.get(id, key ->
                 spacecraftRepository
                         .findById(id)
-                        .orElseThrow( () -> new ApiException(ApiError.INVALID_ID, HttpStatus.BAD_REQUEST) )
+                        .orElseThrow( () -> new ApiException(ApiError.SC_ID_NOT_FOUND, HttpStatus.BAD_REQUEST) )
         );
     }
 
@@ -55,19 +56,16 @@ public class SpacecraftServiceImpl implements SpacecraftService {
     }
 
     @Override
-    public Spacecraft createSpacecraft(Spacecraft spacecraft) {
-        return spacecraftRepository.save(spacecraft);
+    public Spacecraft createSpacecraft(SpacecraftDto dto) {
+        return null;
+        //return spacecraftRepository.save(mapper.map(dto,Spacecraft.class));
     }
 
     @Override
-    public Spacecraft updateSpacecraft(long id, Spacecraft spacecraft) {
-        if (id < 0)
-            throw new ApiException(ApiError.NEGATIVE_ID,HttpStatus.BAD_REQUEST);
-        if (spacecraftRepository.existsById(id)) {
-            spacecraft.setId(id);
-            return spacecraftRepository.save(spacecraft);
-        }
-        throw new ApiException(ApiError.INVALID_ID,HttpStatus.BAD_REQUEST);
+    public Spacecraft updateSpacecraft(long id, SpacecraftDto dto) {
+        if (dto.id() == id && spacecraftRepository.existsById(id)) return null;
+            //return spacecraftRepository.save(mapper.map(dto, Spacecraft.class));
+        throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
     }
 
     @Override

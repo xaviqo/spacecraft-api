@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.xavi.spacecraft.configuration.EndPoints;
+import tech.xavi.spacecraft.dto.SpacecraftDto;
 import tech.xavi.spacecraft.entity.Spacecraft;
 import tech.xavi.spacecraft.service.SpacecraftService;
 
@@ -39,15 +40,15 @@ public class SpacecraftController {
     }
 
     @PostMapping
-    public ResponseEntity<Spacecraft> createSpacecraft(@RequestBody Spacecraft spacecraft) {
+    public ResponseEntity<Spacecraft> createSpacecraft(@RequestBody SpacecraftDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(spacecraftService.createSpacecraft(spacecraft));
+                .body(spacecraftService.createSpacecraft(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Spacecraft> updateSpacecraft(@PathVariable long id, @RequestBody Spacecraft spacecraft) {
-        return ResponseEntity.ok(spacecraftService.updateSpacecraft(id, spacecraft));
+    public ResponseEntity<Spacecraft> updateSpacecraft(@PathVariable long id, @RequestBody SpacecraftDto dto) {
+        return ResponseEntity.ok(spacecraftService.updateSpacecraft(id, dto));
     }
 
     @DeleteMapping("/{id}")

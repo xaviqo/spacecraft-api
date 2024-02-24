@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.xavi.spacecraft.exception.ApiException;
-import tech.xavi.spacecraft.dto.ErrorPayload;
+import tech.xavi.spacecraft.dto.ErrorDto;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,11 +14,11 @@ import java.time.ZonedDateTime;
 public class ExceptionController {
 
     @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<ErrorPayload> springFoodExceptionHandler(
+    public ResponseEntity<ErrorDto> springFoodExceptionHandler(
             ApiException apiException, HttpServletRequest request
     ) {
         return new ResponseEntity<>(
-                ErrorPayload.builder()
+                ErrorDto.builder()
                         .error(apiException.getError().name())
                         .code(apiException.getError().getCode())
                         .message(apiException.getError().getMessage())
