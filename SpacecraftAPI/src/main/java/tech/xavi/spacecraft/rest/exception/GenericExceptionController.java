@@ -28,9 +28,10 @@ public class GenericExceptionController {
 
     private HttpStatus getExceptionStatus(Exception exception){
         return switch (exception.getClass().getSimpleName()) {
+            case "NoResourceFoundException" -> HttpStatus.NOT_FOUND;
             case "HttpMediaTypeNotSupportedException" -> HttpStatus.UNSUPPORTED_MEDIA_TYPE;
             case "HttpRequestMethodNotSupportedException" -> HttpStatus.METHOD_NOT_ALLOWED;
-            case "HttpMessageNotReadableException", "HttpMediaTypeException" -> HttpStatus.BAD_REQUEST;
+            case "HttpMessageNotReadableException", "HttpMediaTypeException", "MethodArgumentTypeMismatchException" -> HttpStatus.BAD_REQUEST;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
     }

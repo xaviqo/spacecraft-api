@@ -13,13 +13,14 @@ import tech.xavi.spacecraft.service.SpacecraftService;
 import java.util.List;
 
 @Log4j2
+@RequiredArgsConstructor
 @RestController
-@RequestMapping(EndPoints.EP_SPACECRAFT) @RequiredArgsConstructor
+@RequestMapping
 public class SpacecraftController {
 
     private final SpacecraftService spacecraftService;
 
-    @GetMapping
+    @GetMapping(EndPoints.EP_SPACECRAFT)
     public ResponseEntity<List<SpacecraftDto>> getAllSpacecrafts(@RequestParam(required = false) Pageable pageable) {
         return ResponseEntity.ok(
                 (pageable != null)
@@ -28,12 +29,12 @@ public class SpacecraftController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = EndPoints.EP_SC_BY_ID)
     public ResponseEntity<SpacecraftDto> getSpacecraftById(@PathVariable long id) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping(value = EndPoints.EP_SC_NAME_CONTAINS)
     public ResponseEntity<List<SpacecraftDto>> getSpacecraftsByNameContains(@RequestParam String name) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftsByNameContains(name));
     }
@@ -45,12 +46,12 @@ public class SpacecraftController {
                 .body(spacecraftService.createSpacecraft(dto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = EndPoints.EP_SC_BY_ID)
     public ResponseEntity<SpacecraftDto> updateSpacecraft(@PathVariable long id, @RequestBody SpacecraftDto dto) {
         return ResponseEntity.ok(spacecraftService.updateSpacecraft(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value =EndPoints.EP_SC_BY_ID)
     public ResponseEntity<Void> deleteSpacecraft(@PathVariable long id) {
         spacecraftService.deleteSpacecraft(id);
         return ResponseEntity.noContent().build();

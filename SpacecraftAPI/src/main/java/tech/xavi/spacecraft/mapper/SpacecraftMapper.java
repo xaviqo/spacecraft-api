@@ -1,10 +1,11 @@
 package tech.xavi.spacecraft.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
 import tech.xavi.spacecraft.entity.Spacecraft;
 
-@Mapper()
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SpacecraftMapper {
 
     SpacecraftDto toDto(Spacecraft sc);
