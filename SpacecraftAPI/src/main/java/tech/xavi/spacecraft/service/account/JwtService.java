@@ -19,6 +19,7 @@ import tech.xavi.spacecraft.repository.RefreshTokenRepository;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
@@ -60,20 +61,22 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Account account, boolean isRefresh) {
+        long expirationInMs = (isRefresh ? ACCESS_TKN_EXP_SEC : REFRESH_TKN_EXP_SEC) * 1000L;
         return Jwts.builder()
+                .claim("role","ROLE_"+account.getRole().name())
                 .setIssuer(ISSUER)
-                .setSubject(userDetails.getUsername())
+                .setSubject(account.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TKN_EXP_SEC))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationInMs))
                 .signWith(SECRET, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(Account account){
+    public String generateAndSaveRefreshToken(Account account){
         return refreshTokenRepository
                 .save(RefreshToken.builder()
-                        .token(generateToken(account))
+                        .token(generateToken(account,true))
                         .owner(account)
                         .revoked(false)
                         .issuedAt(LocalDateTime.now())
@@ -90,7 +93,13 @@ public class JwtService {
 
     }
 
-    public Optional<String> getAccessTokenFromHeaders(HttpServletRequest request){
+    public boolean isRefreshTokenRevoked(String refreshToken){
+        return refreshTokenRepository.findById(refreshToken)
+                .map(RefreshToken::isRevoked)
+                .orElse(true);
+    }
+
+    public Optional<String> getTokenFromHeaders(HttpServletRequest request){
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(authHeader) && authHeader.startsWith(TOKEN_PREFIX))
             return Optional.of(authHeader.replace(TOKEN_PREFIX, ""));
@@ -98,11 +107,9 @@ public class JwtService {
     }
 
     public Collection<? extends GrantedAuthority> extractAuthorities(String token) {
-        return (Collection<? extends GrantedAuthority>)
-                extractClaim(token, claims -> claims.get("roles", Collection.class))
-                        .stream()
-                        .map(str -> new SimpleGrantedAuthority((String) str))
-                        .toList();
+        String role = extractClaim(token, claims -> claims.get("role", String.class));
+        return Collections.singleton(new SimpleGrantedAuthority(role));
+
     }
 
     public String extractUsername(String token){

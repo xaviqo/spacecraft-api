@@ -38,19 +38,31 @@ public class AuthService implements LogoutHandler {
         return signIn(accountDto);
     }
 
+    public SignInDto renewAccountTokens(HttpServletRequest request) {
+        return jwtService.getTokenFromHeaders(request)
+                .filter(oldToken -> !jwtService.isRefreshTokenRevoked(oldToken))
+                .flatMap(oldToken -> accountRepository.findAccountByUsernameIgnoreCase(jwtService.extractUsername(oldToken))
+                        .filter(account -> jwtService.isTokenValid(oldToken, account) && !jwtService.isRefreshTokenRevoked(oldToken))
+                        .map(account -> {
+                            jwtService.invalidateRefreshToken(oldToken);
+                            return getSignInPayload(account);
+                        }))
+                .orElseThrow(() -> new ApiException(ApiError.REF_TOKEN_NOT_VALID, HttpStatus.BAD_REQUEST));
+    }
+
     private SignInDto getSignInPayload(Account account){
         return SignInDto.builder()
                 .accountId(account.getId())
                 .username(account.getUsername())
                 .role(account.getRole())
-                .accessToken(jwtService.generateToken(account))
-                .refreshToken(jwtService.generateRefreshToken(account))
+                .accessToken(jwtService.generateToken(account,false))
+                .refreshToken(jwtService.generateAndSaveRefreshToken(account))
                 .build();
     }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        jwtService.getAccessTokenFromHeaders(request)
+        jwtService.getTokenFromHeaders(request)
                 .ifPresent(jwtService::invalidateRefreshToken);
         SecurityContextHolder.clearContext();
     }

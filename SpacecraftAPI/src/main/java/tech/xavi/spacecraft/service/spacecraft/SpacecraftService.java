@@ -83,6 +83,7 @@ public class SpacecraftService {
     public void deleteSpacecraft(long id) {
         if (spacecraftRepository.existsById(id))
             spacecraftRepository.deleteById(id);
-        throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
+        else
+            throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
     }
 }

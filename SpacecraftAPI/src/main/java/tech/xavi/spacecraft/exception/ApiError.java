@@ -10,7 +10,8 @@ public enum ApiError {
     NEGATIVE_ID(1001,"The spacecraft ID cannot be negative"),
 
     ACC_NAME_EXISTS(2000,"This username is already registered"),
-    ACC_NOT_FOUND(2001,"Account not found");
+    ACC_NOT_FOUND(2001,"Account not found"),
+    REF_TOKEN_NOT_VALID(2003,"Refresh token not valid or not present");
     ;
 
     private final int code;
