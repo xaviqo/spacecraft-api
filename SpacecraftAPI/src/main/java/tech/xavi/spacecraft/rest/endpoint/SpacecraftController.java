@@ -29,29 +29,29 @@ public class SpacecraftController {
         );
     }
 
-    @GetMapping(value = EndPoints.EP_SC_BY_ID)
+    @GetMapping(EndPoints.EP_SC_BY_ID)
     public ResponseEntity<SpacecraftDto> getSpacecraftById(@PathVariable long id) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftById(id));
     }
 
-    @GetMapping(value = EndPoints.EP_SC_NAME_CONTAINS)
+    @GetMapping(EndPoints.EP_SC_NAME_CONTAINS)
     public ResponseEntity<List<SpacecraftDto>> getSpacecraftsByNameContains(@RequestParam String name) {
         return ResponseEntity.ok(spacecraftService.getSpacecraftsByNameContains(name));
     }
 
-    @PostMapping
+    @PostMapping(EndPoints.EP_SPACECRAFT)
     public ResponseEntity<SpacecraftDto> createSpacecraft(@RequestBody SpacecraftDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(spacecraftService.createSpacecraft(dto));
     }
 
-    @PutMapping(value = EndPoints.EP_SC_BY_ID)
+    @PutMapping(EndPoints.EP_SC_BY_ID)
     public ResponseEntity<SpacecraftDto> updateSpacecraft(@PathVariable long id, @RequestBody SpacecraftDto dto) {
         return ResponseEntity.ok(spacecraftService.updateSpacecraft(id, dto));
     }
 
-    @DeleteMapping(value =EndPoints.EP_SC_BY_ID)
+    @DeleteMapping(EndPoints.EP_SC_BY_ID)
     public ResponseEntity<Void> deleteSpacecraft(@PathVariable long id) {
         spacecraftService.deleteSpacecraft(id);
         return ResponseEntity.noContent().build();
