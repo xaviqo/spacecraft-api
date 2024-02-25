@@ -1,4 +1,4 @@
-package tech.xavi.spacecraft.entity;
+package tech.xavi.spacecraft.entity.spacecraft;
 
 public enum Status {
     ACTIVE,

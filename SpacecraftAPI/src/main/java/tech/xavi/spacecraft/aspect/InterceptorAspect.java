@@ -13,7 +13,7 @@ import tech.xavi.spacecraft.exception.ApiException;
 @Component
 public class InterceptorAspect {
 
-    @Before("execution(* tech.xavi.spacecraft.service.SpacecraftServiceImpl.getSpacecraftById(..)) && args(id)")
+    @Before("execution(* tech.xavi.spacecraft.service.spacecraft.SpacecraftService.getSpacecraftById(..)) && args(id)")
     public void logBeforeGetSpacecraftById(long id) {
         if (id < 0) {
             log.error("Negative id requested in getSpacecraftById: {}", id);

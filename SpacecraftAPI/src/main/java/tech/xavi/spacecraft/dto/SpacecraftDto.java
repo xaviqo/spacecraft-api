@@ -1,7 +1,7 @@
 package tech.xavi.spacecraft.dto;
 
 import lombok.Builder;
-import tech.xavi.spacecraft.entity.Status;
+import tech.xavi.spacecraft.entity.spacecraft.Status;
 
 @Builder
 public record SpacecraftDto(

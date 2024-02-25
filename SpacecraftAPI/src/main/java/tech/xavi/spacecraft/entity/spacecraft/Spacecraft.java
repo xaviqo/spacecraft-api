@@ -1,4 +1,4 @@
-package tech.xavi.spacecraft.entity;
+package tech.xavi.spacecraft.entity.spacecraft;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;

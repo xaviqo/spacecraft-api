@@ -1,18 +1,16 @@
 package tech.xavi.spacecraft.rest.endpoint;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.xavi.spacecraft.configuration.EndPoints;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
-import tech.xavi.spacecraft.service.SpacecraftService;
+import tech.xavi.spacecraft.service.spacecraft.SpacecraftService;
 
 import java.util.List;
 
-@Log4j2
 @RequiredArgsConstructor
 @RestController
 @RequestMapping

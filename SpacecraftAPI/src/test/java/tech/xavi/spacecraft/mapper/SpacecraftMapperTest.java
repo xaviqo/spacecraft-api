@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
-import tech.xavi.spacecraft.entity.Spacecraft;
-import tech.xavi.spacecraft.entity.Status;
+import tech.xavi.spacecraft.entity.spacecraft.Spacecraft;
+import tech.xavi.spacecraft.entity.spacecraft.Status;
 
 @Log4j2
 class SpacecraftMapperTest {

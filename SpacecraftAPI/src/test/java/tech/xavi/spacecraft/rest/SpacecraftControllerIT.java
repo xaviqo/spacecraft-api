@@ -13,9 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import tech.xavi.spacecraft.configuration.EndPoints;
-import tech.xavi.spacecraft.entity.Spacecraft;
+import tech.xavi.spacecraft.entity.spacecraft.Spacecraft;
 import tech.xavi.spacecraft.exception.ApiError;
-import tech.xavi.spacecraft.service.FakeDataGenerator;
+import tech.xavi.spacecraft.configuration.FakeDataGenerator;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ class SpacecraftControllerIT {
     @Test
     void createSpacecraft() throws Exception {
         // given
-        Spacecraft requestSpacecraft = fakeDataGenerator.generateTestData(1).get(0);
+        Spacecraft requestSpacecraft = fakeDataGenerator.generateTestSpacecrafts(1).get(0);
         String jsonReqBody = new ObjectMapper().writeValueAsString(requestSpacecraft);
         log.info("TEST: createSpacecraft (POST) {}  - REQ. BODY: {}",
                 EndPoints.EP_SPACECRAFT,
@@ -62,7 +62,7 @@ class SpacecraftControllerIT {
     @Test
     void getSpacecraftsByNameContains() throws Exception {
         // given
-        List<Spacecraft> spacecrafts  = fakeDataGenerator.generateTestData(1);
+        List<Spacecraft> spacecrafts  = fakeDataGenerator.generateTestSpacecrafts(1);
         Spacecraft firstSc = spacecrafts.get(0);
         String searchParamVal = firstSc.getName().substring(1,3);
         log.info("TEST: getSpacecraftsByNameContains (POST) {}  - Search Param Value: {}",

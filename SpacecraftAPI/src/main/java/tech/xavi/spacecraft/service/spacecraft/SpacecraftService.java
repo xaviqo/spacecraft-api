@@ -1,4 +1,4 @@
-package tech.xavi.spacecraft.service;
+package tech.xavi.spacecraft.service.spacecraft;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class SpacecraftServiceImpl implements SpacecraftService {
+public class SpacecraftService {
 
     private final SpacecraftRepository spacecraftRepository;
     private final SpacecraftMapper mapper;
     private final Cache<Long,SpacecraftDto> spacecraftCache;
 
 
-    public SpacecraftServiceImpl(
+    public SpacecraftService(
             SpacecraftRepository spacecraftRepository,
             SpacecraftMapper mapper
     ) {
@@ -33,7 +33,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .build();
     }
 
-    @Override
     public List<SpacecraftDto> getAllSpacecrafts() {
         return spacecraftRepository
                 .findAll()
@@ -42,7 +41,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .toList();
     }
 
-    @Override
     public List<SpacecraftDto> getAllSpacecrafts(Pageable pageable) {
         return spacecraftRepository
                 .findAll(pageable)
@@ -52,7 +50,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .toList();
     }
 
-    @Override
     public SpacecraftDto getSpacecraftById(long id) {
         return spacecraftCache.get(id, key ->
                 spacecraftRepository
@@ -62,7 +59,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
         );
     }
 
-    @Override
     public List<SpacecraftDto> getSpacecraftsByNameContains(String name) {
         return spacecraftRepository
                 .findByNameContaining(name)
@@ -71,13 +67,11 @@ public class SpacecraftServiceImpl implements SpacecraftService {
                 .toList();
     }
 
-    @Override
     public SpacecraftDto createSpacecraft(SpacecraftDto dto) {
         spacecraftRepository.save(mapper.toEntity(dto));
         return dto;
     }
 
-    @Override
     public SpacecraftDto updateSpacecraft(long id, SpacecraftDto dto) {
         if (dto.id() == id && spacecraftRepository.existsById(id)) {
             spacecraftRepository.save(mapper.toEntity(dto));
@@ -86,7 +80,6 @@ public class SpacecraftServiceImpl implements SpacecraftService {
         throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
     }
 
-    @Override
     public void deleteSpacecraft(long id) {
         if (spacecraftRepository.existsById(id))
             spacecraftRepository.deleteById(id);
