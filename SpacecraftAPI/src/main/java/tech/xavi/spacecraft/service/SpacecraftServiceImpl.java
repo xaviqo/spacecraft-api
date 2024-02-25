@@ -10,8 +10,8 @@ import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
 import tech.xavi.spacecraft.mapper.SpacecraftMapper;
 import tech.xavi.spacecraft.repository.SpacecraftRepository;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -54,16 +54,12 @@ public class SpacecraftServiceImpl implements SpacecraftService {
 
     @Override
     public SpacecraftDto getSpacecraftById(long id) {
-        Optional<SpacecraftDto> dto =spacecraftRepository
-                .findById(id)
-                .map(mapper::toDto);
-        return dto.get();
-/*        return spacecraftCache.get(id, key ->
+        return spacecraftCache.get(id, key ->
                 spacecraftRepository
                         .findById(id)
                         .map(mapper::toDto)
                         .orElseThrow(() -> new ApiException(ApiError.SC_ID_NOT_FOUND, HttpStatus.BAD_REQUEST))
-        );*/
+        );
     }
 
     @Override

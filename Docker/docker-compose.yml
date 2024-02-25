@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sc
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: spacecraftapi
+  
+  api:
+    container_name: api
+    image: spacecraftapi:1.0.0
+    build: ../SpacecraftAPI
+    environment:
+      SC_DATASOURCE_URL: jdbc:postgresql://db:5432/spacecraftapi?currentSchema=public&ssl=false
+      SC_DATASOURCE_USER: sc
+      SC_DATASOURCE_PASS: pwd
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
