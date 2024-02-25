@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
+import tech.xavi.spacecraft.entity.spacecraft.Spacecraft;
 import tech.xavi.spacecraft.exception.ApiError;
 import tech.xavi.spacecraft.exception.ApiException;
 import tech.xavi.spacecraft.mapper.SpacecraftMapper;
@@ -68,16 +69,18 @@ public class SpacecraftService {
     }
 
     public SpacecraftDto createSpacecraft(SpacecraftDto dto) {
-        spacecraftRepository.save(mapper.toEntity(dto));
-        return dto;
+        return mapper.toDto(spacecraftRepository.save(mapper.toEntity(dto)));
     }
 
     public SpacecraftDto updateSpacecraft(long id, SpacecraftDto dto) {
-        if (dto.id() == id && spacecraftRepository.existsById(id)) {
-            spacecraftRepository.save(mapper.toEntity(dto));
-            return dto;
-        }
-        throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
+        return spacecraftRepository
+                .findById(id)
+                .map( originalSc -> {
+                    updateSpacecraftFields(originalSc,dto);
+                    spacecraftRepository.save(originalSc);
+                    return mapper.toDto(originalSc);
+                })
+                .orElseThrow( () -> new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST));
     }
 
     public void deleteSpacecraft(long id) {
@@ -85,5 +88,20 @@ public class SpacecraftService {
             spacecraftRepository.deleteById(id);
         else
             throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
+    }
+
+    private void updateSpacecraftFields(Spacecraft existingSc, SpacecraftDto dto) {
+        if (dto.name() != null)
+            existingSc.setName(dto.name());
+        if (dto.maxSpeed() != 0)
+            existingSc.setMaxSpeed(dto.maxSpeed());
+        if (dto.width() != 0)
+            existingSc.setWidth(dto.width());
+        if (dto.height() != 0)
+            existingSc.setHeight(dto.height());
+        if (dto.crewSize() != 0)
+            existingSc.setCrewSize(dto.crewSize());
+        if (dto.status() != null)
+            existingSc.setStatus(dto.status());
     }
 }

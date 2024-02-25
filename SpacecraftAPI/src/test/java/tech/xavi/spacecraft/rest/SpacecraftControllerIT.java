@@ -54,7 +54,7 @@ class SpacecraftControllerIT {
                 .getResponse();
         String jsonResBody = response.getContentAsString();
         // then
-        assertEquals(HttpStatus.CREATED.value(),response.getStatus(),"HttpStatus should be created");
+        assertEquals(HttpStatus.CREATED.value(),response.getStatus(),"HttpStatus should be CREATED");
         assertEquals(jsonReqBody,jsonResBody,"Json Response should be the same");
         log.info("RETRIEVED RESPONSE: {}",jsonResBody);
     }

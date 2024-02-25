@@ -1,0 +1,141 @@
+= SpacecraftAPI
+:author: Xavier Quiñones
+:rouge-style: github
+:!showtitle:
+:icons: font
+:toc: preamble
+
+== Description
+
+Sandbox REST API with the following features:
+
+* Pagination
+* CRUD w/ persistence (H2 or PostgreSQL)
+* Unit and Integration Testing
+* Aspects
+* Complete Exception Handling
+* Caching (w/ Caffeine)
+* Dockerization
+* Security with Spring Security. JWT (Including Refresh Token) and User Roles
+* Swagger (http://localhost:8080/swagger-ui/index.html)
+* Lombok
+* Testing dataset on startup
+
+== Run the application
+
+=== Clone the repository
+
+----
+git clone https://github.com/xaviqo/spacecraft-api.git
+----
+
+=== Run with Docker
+
+* *Requirements:*
+
+** Docker (https://docs.docker.com/get-started/)
+** Compose (https://docs.docker.com/compose/install/)
+
+* Move to *Docker* folder from terminal:
+
+----
+cd Docker/
+----
+
+* Build
+
+----
+docker-compose build --no-cache
+----
+
+* Launch
+
+----
+docker-compose up
+----
+
+=== Or build and run locally
+
+* *Requirements:*
+
+** Java 21 JRE && SDK
+
+* In the *pom.xml* file _(root API folder)_ comment the *Postgres* dependency and uncomment the *H2* one.
+
+* In the *application.yml* file _(resources folder)_ comment the JDBC *Postgres* connexion and uncomment the *H2* one.
+
+* Then, move to *SpacecraftAPI* folder from terminal:
+
+----
+cd SpacecraftAPI/
+----
+
+* Launch:
+
+** Run tests:
+
+----
+./mvnw test
+----
+
+** Start API:
+
+----
+./mvnw spring-boot:run
+----
+
+====
+*In local execution* _(not available with docker and PgDB)_, you can access the embedded GUI console of H2DB from the following URL:
+
+* http://localhost:8080/h2-console
+====
+
+== Configuration parameters
+
+== REST Endpoints
+=== White listed
+
+* */v1/api/spacecraft* [GET]: Get all spacecrafts
+
+* */v1/api/spacecraft/{_id_}* [GET]: Get spacecraft by id
+
+* */v1/api/spacecraft/search*  [GET] - _Params: (name)_: Get spacecraft if spacecraft name contains param
+
+* */v1/api/account/sign-up* [POST]: Create new user with role USER
+
+.Request body example
+[source,json]
+----
+{
+  "username":"hola",
+  "password":"adios"
+}
+----
+
+=== Secured _(Bearer token required)_
+==== USER and ADMIN role
+
+* */v1/api/spacecraft*  [POST] - _Params: (name)_: Create new spacecraft
+
+.Request body example
+[source,json]
+----
+{
+    "name": "Mercury",
+    "maxSpeed": 4945,
+    "width": 472,
+    "height": 134,
+    "crewSize": 746,
+    "status": "DESTROYED"
+  }
+----
+
+==== Only ADMIN role
+== Static
+
+* SWAGGER UI: http://localhost:8080/swagger-ui/index.html
+
+* H2 GUI _(not available w/ Docker)_: http://localhost:8080/h2-console
+
+
+
