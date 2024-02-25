@@ -90,18 +90,27 @@ cd SpacecraftAPI/
 * http://localhost:8080/h2-console
 ====
 
-== Configuration parameters
-
 == REST Endpoints
 === White listed
 
-* */v1/api/spacecraft* [GET]: Get all spacecrafts
+* *Get all spacecrafts* [GET]: /v1/api/spacecraft
 
-* */v1/api/spacecraft/{_id_}* [GET]: Get spacecraft by id
+* *Get spacecraft by id* [GET]: /v1/api/spacecraft/{_id_} (_This method response is cached for 10 seconds_)
 
-* */v1/api/spacecraft/search*  [GET] - _Params: (name)_: Get spacecraft if spacecraft name contains param
+* *Get spacecraft if spacecraft name contains param*  [GET] _Params: (name)_: /v1/api/spacecraft/search
 
-* */v1/api/account/sign-up* [POST]: Create new user with role USER
+* *Create new user with role USER* [POST]: /v1/api/account/sign-up
+
+.Request body example
+[source,json]
+----
+{
+  "username":"hola",
+  "password":"adios"
+}
+----
+
+* *Sign In* [POST]: /v1/api/account/sign-in
 
 .Request body example
 [source,json]
@@ -115,27 +124,48 @@ cd SpacecraftAPI/
 === Secured _(Bearer token required)_
 ==== USER and ADMIN role
 
-* */v1/api/spacecraft*  [POST] - _Params: (name)_: Create new spacecraft
+* *Create new spacecraft* [POST]: /v1/api/spacecraft
 
 .Request body example
 [source,json]
 ----
 {
-    "name": "Mercury",
-    "maxSpeed": 4945,
-    "width": 472,
-    "height": 134,
-    "crewSize": 746,
+    "name": "Sputnik 2",
+    "maxSpeed": 1957,
+    "width": 2000,
+    "height": 4000,
+    "crewSize": 1,
     "status": "DESTROYED"
   }
 ----
 
+* *Update specified spacecraft fields*  [POST]: /v1/api/spacecraft/{_id_}
+
+.Request body example
+[source,json]
+----
+{
+    "name": "Nebuchadnezzar",
+    "maxSpeed": 1337,
+    "status": "UNDER_REPAIR"
+  }
+----
+
+* *Refresh access token*  [POST]: /v1/api/account/refresh
+
 ==== Only ADMIN role
+
+* *Delete spacecraft* [DELETE]: /v1/api/spacecraft/{_id_}
+
 == Static
 
 * SWAGGER UI: http://localhost:8080/swagger-ui/index.html
 
 * H2 GUI _(not available w/ Docker)_: http://localhost:8080/h2-console
 
+////
+== Configuration parameters
 
+_TODO_
+////
 
