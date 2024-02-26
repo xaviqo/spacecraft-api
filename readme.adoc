@@ -93,7 +93,7 @@ cd SpacecraftAPI/
 == REST Endpoints
 === White listed
 
-* *Get all spacecrafts* [GET]: /v1/api/spacecraft
+* *Get all spacecrafts (with pagination)* [GET] _Optional Params: (page && size)_: /v1/api/spacecraft
 
 * *Get spacecraft by id* [GET]: /v1/api/spacecraft/{_id_} (_This method response is cached for 10 seconds_)
 

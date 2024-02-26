@@ -2,7 +2,7 @@ package tech.xavi.spacecraft.service.spacecraft;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tech.xavi.spacecraft.dto.SpacecraftDto;
@@ -42,9 +42,9 @@ public class SpacecraftService {
                 .toList();
     }
 
-    public List<SpacecraftDto> getAllSpacecrafts(Pageable pageable) {
+    public List<SpacecraftDto> getAllSpacecrafts(int page, int size) {
         return spacecraftRepository
-                .findAll(pageable)
+                .findAll(PageRequest.of(page, size))
                 .getContent()
                 .stream()
                 .map(mapper::toDto)
@@ -78,16 +78,19 @@ public class SpacecraftService {
                 .map( originalSc -> {
                     updateSpacecraftFields(originalSc,dto);
                     spacecraftRepository.save(originalSc);
+                    spacecraftCache.invalidate(id);
                     return mapper.toDto(originalSc);
                 })
                 .orElseThrow( () -> new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST));
     }
 
     public void deleteSpacecraft(long id) {
-        if (spacecraftRepository.existsById(id))
+        if (spacecraftRepository.existsById(id)){
             spacecraftRepository.deleteById(id);
-        else
+            spacecraftCache.invalidate(id);
+        } else {
             throw new ApiException(ApiError.SC_ID_NOT_FOUND,HttpStatus.BAD_REQUEST);
+        }
     }
 
     private void updateSpacecraftFields(Spacecraft existingSc, SpacecraftDto dto) {

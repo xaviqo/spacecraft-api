@@ -1,7 +1,6 @@
 package tech.xavi.spacecraft.rest.endpoint;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +18,11 @@ public class SpacecraftController {
     private final SpacecraftService spacecraftService;
 
     @GetMapping(EndPoints.EP_SPACECRAFT)
-    public ResponseEntity<List<SpacecraftDto>> getAllSpacecrafts(@RequestParam(required = false) Pageable pageable) {
+    public ResponseEntity<List<SpacecraftDto>> getAllSpacecrafts(@RequestParam(required = false) Integer page,
+                                                                 @RequestParam(required = false) Integer size) {
         return ResponseEntity.ok(
-                (pageable != null)
-                        ? spacecraftService.getAllSpacecrafts(pageable)
+                (page != null && size != null)
+                        ? spacecraftService.getAllSpacecrafts(page,size)
                         : spacecraftService.getAllSpacecrafts()
         );
     }
