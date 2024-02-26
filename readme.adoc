@@ -21,6 +21,12 @@ Sandbox REST API with the following features:
 * Lombok
 * Testing dataset on startup
 
+=== Live Demo
+
+* *API Demo deployed on my own VPS*
+
+** https://spacecraft.xavi.tech/swagger-ui/index.html
+
 == Run the application
 
 === Clone the repository
