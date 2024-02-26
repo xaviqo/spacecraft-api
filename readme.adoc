@@ -174,33 +174,33 @@ xavi:
     spacecraft:
       cfg:
         test:
-          fake-spacecraft-entries: Number of fake spacecraft entries
+          fake-spacecraft-entries: Number of fake spacecraft entries (int)
           credentials:
-            create-fake-accounts: Create fake accounts
-            admin: Admin creds separted by coma
-            user: User creds separated by coma
+            create-fake-accounts: Create fake accounts (bool)
+            admin: Admin creds separted by coma (str [admin,pwd])
+            user: User creds separated by coma (str [user,pwd])
         jwt:
-          issuer: JWT token issuer
-          access-tkn-exp-sec: Access token expiration time in sec
-          refresh-tkn-exp-sec: Refresh token expiration time in sec
+          issuer: JWT token issuer (str)
+          access-tkn-exp-sec: Access token expiration time in sec (int)
+          refresh-tkn-exp-sec: Refresh token expiration time in sec (int)
 
 logging:
   level:
-    tech.xavi.spacecraft: Log level for our own code
-    root: Log level from application root
+    tech.xavi.spacecraft: Log level for our own code (TRACE,DEBUG,INFO...)
+    root: Log level from application root (TRACE,DEBUG,INFO...)
 
 spring:
   datasource:
-    url: JDBC URI for datasource
-    username: Datasource username
-    password: Datasource password
+    url: JDBC URI for datasource (str)
+    username: Datasource username (str)
+    password: Datasource password (str)
   jpa:
     hibernate:
-      ddl-auto: Schema manipulation on app startup
+      ddl-auto: Schema manipulation on app startup (create-drop,update...)
   h2:
     console:
-      enabled: Enable H2 UI
+      enabled: Enable H2 UI (bool)
 springdoc:
   api-docs:
-    path: Springdoc path
+    path: Springdoc path (str)
 ----
