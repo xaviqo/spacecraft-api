@@ -163,9 +163,44 @@ cd SpacecraftAPI/
 
 * H2 GUI _(not available w/ Docker)_: http://localhost:8080/h2-console
 
-////
 == Configuration parameters
 
-_TODO_
-////
+* These are the configuration parameters available in the application.yaml file:
 
+[source,yaml]
+----
+xavi:
+  tech:
+    spacecraft:
+      cfg:
+        test:
+          fake-spacecraft-entries: Number of fake spacecraft entries
+          credentials:
+            create-fake-accounts: Create fake accounts
+            admin: Admin creds separted by coma
+            user: User creds separated by coma
+        jwt:
+          issuer: JWT token issuer
+          access-tkn-exp-sec: Access token expiration time in sec
+          refresh-tkn-exp-sec: Refresh token expiration time in sec
+
+logging:
+  level:
+    tech.xavi.spacecraft: Log level for our own code
+    root: Log level from application root
+
+spring:
+  datasource:
+    url: JDBC URI for datasource
+    username: Datasource username
+    password: Datasource password
+  jpa:
+    hibernate:
+      ddl-auto: Schema manipulation on app startup
+  h2:
+    console:
+      enabled: Enable H2 UI
+springdoc:
+  api-docs:
+    path: Springdoc path
+----

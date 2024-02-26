@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Xavi",
+                        name = "Xavi QO",
                         url = "https://xavi.tech"
                 ),
                 description = "Spacecrafts REST API Sandbox",
