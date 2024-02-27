@@ -12,6 +12,7 @@ Sandbox REST API with the following features:
 * Pagination
 * CRUD w/ persistence (H2 or PostgreSQL)
 * Unit and Integration Testing
+* Mapstruct for Entity/DTO conversion
 * Aspects
 * Complete Exception Handling
 * Caching (w/ Caffeine)
