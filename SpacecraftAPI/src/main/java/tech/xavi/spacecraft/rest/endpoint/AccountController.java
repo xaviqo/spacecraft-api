@@ -12,7 +12,7 @@ import tech.xavi.spacecraft.service.account.AuthService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping()
 public class AccountController {
 
     private final AuthService authService;

@@ -15,7 +15,6 @@ public class GenericExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception ex, HttpServletRequest request) {
-        System.out.println("se llama el generico");
         HttpStatus status = getExceptionStatus(ex);
         ErrorDto errorDto = ErrorDto.builder()
                 .error(status.name())

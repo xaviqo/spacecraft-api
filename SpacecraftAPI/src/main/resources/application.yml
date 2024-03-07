@@ -13,6 +13,7 @@ xavi:
           access-tkn-exp-sec: 120
           refresh-tkn-exp-sec: 320
 
+
 logging:
   level:
     tech.xavi.spacecraft: DEBUG
@@ -33,3 +34,6 @@ spring:
 springdoc:
   api-docs:
     path: /openapi
+
+server:
+  port: 8080
